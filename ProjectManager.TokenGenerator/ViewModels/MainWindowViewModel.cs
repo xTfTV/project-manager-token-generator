@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProjectManager.TokenGenerator.Services;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 
 namespace ProjectManager.TokenGenerator.ViewModels;
 
@@ -54,8 +57,22 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void CopyToken()
+    private async Task CopyTokenAsync()
     {
-        StatusMessage = "Copy token not wired yet";
+        if (string.IsNullOrWhiteSpace(Token))
+        {
+            StatusMessage = "There is no token to copy";
+            return;
+        }
+
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow?.Clipboard is not null)
+        {
+            await desktop.MainWindow.Clipboard.SetTextAsync(Token);
+
+            StatusMessage = "Token Copied to the clipboard";
+            return;
+        }
+
+        StatusMessage = "Unable to access the clipboard";
     }
 }
