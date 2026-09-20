@@ -34,7 +34,7 @@ public class TokenApiService
             password
         };
 
-        var response = await _httpClient.PostAsJsonAsync("v1/apiAuth/login", request);
+        var response = await _httpClient.PostAsJsonAsync("v1/api/Auth/login", request);
 
         if (!response.IsSuccessStatusCode)
         {
