@@ -1,10 +1,20 @@
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProjectManager.TokenGenerator.Services;
 
 namespace ProjectManager.TokenGenerator.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
+    private readonly TokenApiService _tokenApiService;
+
+    public MainWindowViewModel()
+    {
+        _tokenApiService = new TokenApiService("https://localhost:7007");
+    }
+
     [ObservableProperty]
     private string emailAddress = string.Empty;
 
@@ -18,9 +28,29 @@ public partial class MainWindowViewModel : ObservableObject
     private string statusMessage = string.Empty;
 
     [RelayCommand]
-    private void GenerateToken()
+    private async Task GenerateTokenAsync()
     {
-        StatusMessage = "Token generation not wired yet";
+        try
+        {
+            StatusMessage = "Generating Token...";
+
+            var generatedToken = await _tokenApiService.GenerateTokenAsync(EmailAddress, Password);
+
+            if (string.IsNullOrWhiteSpace(generatedToken))
+            {
+                Token = string.Empty;
+                StatusMessage = "Login Failed";
+                return;
+            }
+
+            Token = generatedToken;
+            StatusMessage = "Generated the token successfully";   
+        }
+        catch (Exception ex)
+        {
+            Token = string.Empty;
+            StatusMessage = $"Error: {ex.Message}";
+        }
     }
 
     [RelayCommand]
