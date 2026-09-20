@@ -1,22 +1,86 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:ProjectManager.TokenGenerator.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="ProjectManager.TokenGenerator.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="ProjectManager.TokenGenerator">
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:ProjectManager.TokenGenerator.ViewModels"
+    x:Class="ProjectManager.TokenGenerator.Views.MainWindow"
+    x:DataType="vm:MainWindowViewModel"
+    Width="700"
+    Height="500"
+    Title="Project Manager Token Generator">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
-    </Design.DataContext>
+    <Grid
+        Margin="30"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+        ColumnDefinitions="*">
 
-    <TextBox Text="{Binding Greeting}"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
+        <TextBlock
+            Grid.Row="0"
+            Text="Project Manager Token Generator"
+            FontSize="24"
+            FontWeight="Bold"
+            Margin="0,0,0,20" />
+
+        <StackPanel
+            Grid.Row="1"
+            Spacing="8">
+
+            <TextBlock Text="Email" />
+
+            <TextBox
+                Text="{Binding EmailAddress}"
+                Watermark="Enter email address" />
+
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            Spacing="8"
+            Margin="0,15,0,0">
+
+            <TextBlock Text="Password" />
+
+            <TextBox
+                Text="{Binding Password}"
+                PasswordChar="●"
+                Watermark="Enter Password" />
+
+        </StackPanel>
+
+        <Button
+            Grid.Row="3"
+            Content="Generate Token"
+            Command="{Binding GenerateTokenCommand}"
+            HorizontalAlignment="Left"
+            Margin="0,20,0,0"
+            Padding="20,10" />
+
+        <StackPanel
+            Grid.Row="4"
+            Spacing="8"
+            Margin="0,20,0,0">
+
+            <TextBlock Text="JWT Token" />
+
+            <TextBox
+                Text="{Binding Token}"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                Height="150"
+                TextWrapping="Wrap" />
+
+            <Button
+                Content="Copy Token"
+                Command="{Binding CopyTokenCommand}"
+                HorizontalAlignment="Left"
+                Padding="20,10" />
+
+        </StackPanel>
+
+        <TextBlock
+            Grid.Row="5"
+            Text="{Binding StatusMessage}"
+            Margin="0,20,0,0" />
+
+    </Grid>
 
 </Window>
